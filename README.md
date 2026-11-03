@@ -33,18 +33,18 @@
 ## 🗂️ 폴더 및 파일 구조
 
 ```text
-aiworks/schedule/
-├── briefing.py              # 데이터 수집, 웹 배포 및 스마트폰 푸시 알림 메인 스크립트
-├── run.bat                  # 수동 즉시 실행 배치 파일 (더블클릭 실행 가능)
-├── 깃허브_자동반영.bat       # 수동 깃허브 호스팅 동기화 배치 파일
-├── sync_to_github.py        # 깃허브 호스팅 동기화 스크립트
-├── setup_scheduler.ps1      # 윈도우 작업 스케줄러(매일 06:00) 등록 스크립트
-├── uninstall_scheduler.ps1  # 스케줄러 작업 삭제 스크립트
-├── index.html               # 로컬 웹 대시보드
-├── latest_briefing.md       # 최신 브리핑 마크다운 리포트
-├── history.csv              # 일별 핵심 지표 누적 시계열 데이터 (Excel 호환)
-├── data/                    # 날짜별 원본 데이터 JSON 저장소
-└── reports/                 # 날짜별 마크다운 일일 브리핑 저장소
+aiworks/schedule/briefing/       # 독립 GitHub 저장소 (hellouou/briefing)
+├── briefing.py                  # 데이터 수집, 웹 배포 및 스마트폰 푸시 알림 메인 스크립트
+├── run.bat                      # 수동 즉시 실행 배치 파일 (더블클릭 실행 가능)
+├── 깃허브_자동반영.bat           # 수동 깃허브 호스팅 동기화 배치 파일
+├── sync_to_github.py            # briefing 저장소 자체 푸시 스크립트
+├── setup_scheduler.ps1          # 윈도우 작업 스케줄러(매일 06:00) 등록 스크립트
+├── uninstall_scheduler.ps1      # 스케줄러 작업 삭제 스크립트
+├── index.html                   # 웹 대시보드 (다크모드 기본/3모드 전환/신문기사 전문 인앱 뷰어)
+├── latest_briefing.md           # 최신 브리핑 마크다운 리포트
+├── history.csv                  # 일별 핵심 지표 누적 시계열 데이터 (Excel 호환)
+├── data/                        # 날짜별 원본 데이터 JSON 저장소
+└── reports/                     # 날짜별 마크다운 일일 브리핑 저장소
 ```
 
 ---
