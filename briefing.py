@@ -19,7 +19,7 @@ REPORTS_DIR = os.path.join(BASE_DIR, "reports")
 # 공유용 공식 마스킹 URL (개인 깃허브 계정 노출 방지용 단축링크)
 PUBLIC_MASKED_URL = "https://tr.ee/Z51VtU"
 # 실제 내부 호스팅 URL (배포 목적지 - 외부에 노출하지 않음)
-INTERNAL_HOSTING_URL = "https://hellouou.github.io/ins/briefing.html"
+INTERNAL_HOSTING_URL = "https://hellouou.github.io/briefing/"
 # 핸드폰 알림 채널명 (ntfy.sh 앱에서 구독할 채널)
 NTFY_TOPIC = "briefing-hellouou"
 
@@ -413,25 +413,12 @@ def send_mobile_push(date_str, market_summary, click_url=PUBLIC_MASKED_URL, topi
         print(f"[푸시 알림 전송 참고] {e}", file=sys.stderr)
 
 def sync_to_github_pages(date_str):
-    """GitHub Pages에 자동 동기화 및 푸시 (루트 briefing.html 및 docs/briefing.html 모두 갱신)"""
-    ins_dir = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "ins"))
-    ins_root_file = os.path.join(ins_dir, "briefing.html")
-    ins_docs_file = os.path.join(ins_dir, "docs", "briefing.html")
-    
-    if os.path.exists(ins_dir) and os.path.exists(os.path.join(ins_dir, ".git")):
+    """GitHub Pages에 자동 동기화 및 푸시 (독립된 briefing 저장소 자체 푸시)"""
+    if os.path.exists(os.path.join(BASE_DIR, ".git")):
         try:
-            src_html = os.path.join(BASE_DIR, "index.html")
-            
-            # 1. 루트 briefing.html 복사 (GitHub Pages 루트 배포 호환)
-            shutil.copy2(src_html, ins_root_file)
-            
-            # 2. docs/briefing.html 복사 (docs 배포 호환)
-            os.makedirs(os.path.dirname(ins_docs_file), exist_ok=True)
-            shutil.copy2(src_html, ins_docs_file)
-
-            subprocess.run(["git", "add", "briefing.html", "docs/briefing.html"], cwd=ins_dir, check=True)
-            subprocess.run(["git", "commit", "-m", f"Auto-update morning briefing ({date_str})"], cwd=ins_dir, capture_output=True)
-            res = subprocess.run(["git", "push", "origin", "main"], cwd=ins_dir, capture_output=True, text=True)
+            subprocess.run(["git", "add", "index.html", "latest_briefing.md", "history.csv", "data", "reports"], cwd=BASE_DIR, check=True)
+            subprocess.run(["git", "commit", "-m", f"Auto-update morning briefing ({date_str})"], cwd=BASE_DIR, capture_output=True)
+            res = subprocess.run(["git", "push", "origin", "main"], cwd=BASE_DIR, capture_output=True, text=True)
             if res.returncode == 0:
                 print(f"🌐 GitHub Pages 웹 호스팅 배포 완료: {INTERNAL_HOSTING_URL} (공개 단축링크: {PUBLIC_MASKED_URL})")
                 return PUBLIC_MASKED_URL
