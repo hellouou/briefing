@@ -388,6 +388,57 @@ def fetch_opinions_maekyung():
                 break
     return opinion_list
 
+def fetch_investing_news():
+    """인베스팅닷컴(kr.investing.com) 실시간 주요 뉴스 수집 (주식시장, 경제, 핫이슈)"""
+    feeds = [
+        ("hot", "🔥 실시간 핫이슈", "https://kr.investing.com/rss/news_285.rss"),
+        ("stock", "📈 증시 뉴스", "https://kr.investing.com/rss/news_25.rss"),
+        ("economy", "🌍 글로벌 경제", "https://kr.investing.com/rss/news_14.rss"),
+    ]
+    all_news = []
+    seen_links = set()
+    
+    for category_id, category_name, url in feeds:
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"})
+            with urllib.request.urlopen(req, timeout=7) as resp:
+                root = ET.fromstring(resp.read())
+                items = root.findall("channel/item")
+                for it in items[:6]:
+                    link = (it.find("link").text or "").strip()
+                    if not link or link in seen_links:
+                        continue
+                    seen_links.add(link)
+                    title = (it.find("title").text or "").strip()
+                    pub_date = (it.find("pubDate").text or "").strip()
+                    author = (it.find("author").text or "Investing.com").strip() if it.find("author") is not None else "Investing.com"
+                    enc = it.find("enclosure")
+                    img_url = enc.attrib.get("url") if enc is not None else ""
+                    
+                    inv_id = f"inv_{len(all_news)}"
+                    all_news.append({
+                        "id": inv_id,
+                        "press": "인베스팅닷컴",
+                        "category_id": category_id,
+                        "category_name": category_name,
+                        "headline": title,
+                        "link": link,
+                        "pub_date": pub_date,
+                        "author": author,
+                        "img_url": img_url,
+                        "summary": f"[{category_name}] 출처: {author} | 발행: {pub_date}",
+                        "paragraphs": [
+                            f"📌 {title}",
+                            f"보도 출처: {author} (제공: 인베스팅닷컴 kr.investing.com)",
+                            f"발행 일시: {pub_date}",
+                            "본 기사는 인베스팅닷컴(Investing.com)의 공식 실시간 뉴스 피드입니다. 글로벌 증시 속보, 심층 분석, 실시간 종목 차트 및 투자자 반응은 아래 [인베스팅닷컴 원문 페이지에서 보기] 버튼을 통해 전문으로 확인하실 수 있습니다."
+                        ]
+                    })
+        except Exception as e:
+            print(f"[인베스팅닷컴 수집 참고] {url}: {e}", file=sys.stderr)
+            
+    return all_news
+
 # ==========================================
 # 모바일 푸시 알림 & GitHub Pages 자동 배포
 # ==========================================
@@ -453,7 +504,7 @@ def save_csv_history(now_str, market_data):
             writer.writerow(headers)
         writer.writerow(row)
 
-def save_markdown_report(date_str, time_str, market_data, market_summary, press_reports):
+def save_markdown_report(date_str, time_str, market_data, market_summary, press_reports, investing_news=None):
     """서식화된 마크다운 일일 브리핑 리포트 생성"""
     md = []
     md.append(f"# 📊 일일 경제·증시 및 3대 언론사 심층 모닝 브리핑")
@@ -538,6 +589,14 @@ def save_markdown_report(date_str, time_str, market_data, market_summary, press_
 
         md.append("---\n")
 
+    if investing_news:
+        md.append("## 📈 [인베스팅닷컴] kr.investing.com 글로벌 증시 & 경제 주요 뉴스\n")
+        for idx, a in enumerate(investing_news, 1):
+            md.append(f"**{idx}. [{a['category_name']}] [{a['headline']}]({a['link']})**")
+            md.append(f"- *출처*: {a['author']} | *일시*: {a['pub_date']}")
+            md.append("")
+        md.append("---\n")
+
     md.append(f"*본 브리핑은 매일 아침 06:00에 자동으로 수집 및 저장됩니다. 공유용 웹 링크: {PUBLIC_MASKED_URL}*")
 
     full_md = "\n".join(md)
@@ -552,7 +611,7 @@ def save_markdown_report(date_str, time_str, market_data, market_summary, press_
 
     return daily_file, latest_file
 
-def save_html_dashboard(date_str, time_str, market_data, market_summary, press_reports):
+def save_html_dashboard(date_str, time_str, market_data, market_summary, press_reports, investing_news=None):
     """웹 브라우저에서 보기 쉬운 모던 대시보드 HTML 파일 생성 (공유 기능 탑재)"""
     html_file = os.path.join(BASE_DIR, "index.html")
 
@@ -606,6 +665,10 @@ def save_html_dashboard(date_str, time_str, market_data, market_summary, press_r
         for o in p.get("opinions", []):
             if "id" in o:
                 articles_map[o["id"]] = o
+    if investing_news:
+        for inv in investing_news:
+            if "id" in inv:
+                articles_map[inv["id"]] = inv
     articles_json_str = json.dumps(articles_map, ensure_ascii=False)
 
     # 언론사별 뉴스 & 사설 카드
@@ -698,6 +761,100 @@ def save_html_dashboard(date_str, time_str, market_data, market_summary, press_r
             </div>
         </div>
         """
+
+    investing_section_html = ""
+    if investing_news:
+        investing_cards_html = ""
+        for idx, inv in enumerate(investing_news, 1):
+            inv_id = inv["id"]
+            cat_id = inv["category_id"]
+            cat_name = inv["category_name"]
+            
+            if cat_id == "hot":
+                cat_badge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/15 text-rose-500 border border-rose-500/30">🔥 핫이슈</span>'
+            elif cat_id == "stock":
+                cat_badge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/15 text-blue-500 border border-blue-500/30">📈 증시</span>'
+            else:
+                cat_badge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/15 text-emerald-500 border border-emerald-500/30">🌍 경제</span>'
+                
+            img_html = ""
+            if inv.get("img_url"):
+                img_html = f'''
+                <div class="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 rounded-lg overflow-hidden bg-slate-200 border theme-border-subtle self-center">
+                    <img src="{inv['img_url']}" alt="뉴스 썸네일" class="w-full h-full object-cover" loading="lazy">
+                </div>
+                '''
+                
+            time_text = inv.get("pub_date", "")
+            if " " in time_text:
+                time_parts = time_text.split(" ")
+                time_text = time_parts[1][:5]
+                
+            investing_cards_html += f'''
+            <div class="investing-news-item p-3.5 theme-news-row bg-slate-50 rounded-xl hover:opacity-95 transition border border-transparent flex gap-3 justify-between" data-category="{cat_id}">
+                <div class="flex-1 space-y-1.5 flex flex-col justify-between">
+                    <div class="space-y-1">
+                        <div class="flex items-center justify-between text-[11px] gap-2">
+                            <div class="flex items-center gap-1.5 flex-wrap">
+                                {cat_badge}
+                                <span class="theme-subtitle font-medium text-gray-500">{inv['author']}</span>
+                            </div>
+                            <span class="theme-subtitle text-[10px] text-gray-400 font-mono">{time_text}</span>
+                        </div>
+                        <button type="button" onclick="openArticleModal('{inv_id}')" class="text-left text-sm font-bold theme-title hover:text-orange-500 hover:underline line-clamp-2 leading-snug">
+                            {inv['headline']}
+                        </button>
+                    </div>
+                    <div class="pt-1 flex items-center justify-between text-[11px]">
+                        <button type="button" onclick="openArticleModal('{inv_id}')" class="font-semibold text-orange-500 hover:underline flex items-center gap-1 cursor-pointer">
+                            <span>📖 기사 보기</span>
+                        </button>
+                        <a href="{inv['link']}" target="_blank" title="인베스팅닷컴 원문 새창 열기" class="theme-subtitle text-gray-400 hover:text-orange-500 flex items-center gap-0.5">
+                            <span>원문</span> <span>↗</span>
+                        </a>
+                    </div>
+                </div>
+                {img_html}
+            </div>
+            '''
+
+        investing_section_html = f'''
+        <!-- Investing.com Section (매일경제 하단 별도 탭 배치) -->
+        <div class="theme-card bg-white rounded-2xl p-6 shadow-sm border border-gray-100 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-100 pb-3 theme-border-subtle gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="px-2.5 py-1 text-xs font-bold text-white rounded-md bg-orange-500 flex items-center gap-1 shadow-sm">
+                        <span>⚡</span> 인베스팅닷컴
+                    </span>
+                    <span class="text-sm font-bold theme-title text-gray-800">kr.investing.com 글로벌 증시 & 경제 주요 뉴스</span>
+                </div>
+                <a href="https://kr.investing.com/news" target="_blank" class="text-xs theme-subtitle text-orange-500 hover:text-orange-600 hover:underline flex items-center gap-1">
+                    <span>인베스팅닷컴 바로가기</span> <span>↗</span>
+                </a>
+            </div>
+
+            <!-- 카테고리 탭 선택 버튼 -->
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 border-b theme-border-subtle text-xs">
+                <button type="button" onclick="switchInvestingTab('all')" class="investing-tab-btn active px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1" data-tab="all">
+                    <span>📋</span> <span>전체 ({len(investing_news)})</span>
+                </button>
+                <button type="button" onclick="switchInvestingTab('hot')" class="investing-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1" data-tab="hot">
+                    <span>🔥</span> <span>실시간 핫이슈</span>
+                </button>
+                <button type="button" onclick="switchInvestingTab('stock')" class="investing-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1" data-tab="stock">
+                    <span>📈</span> <span>증시 뉴스</span>
+                </button>
+                <button type="button" onclick="switchInvestingTab('economy')" class="investing-tab-btn px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1" data-tab="economy">
+                    <span>🌍</span> <span>글로벌 경제</span>
+                </button>
+            </div>
+
+            <!-- 뉴스 카드 목록 그리드 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="investing-news-container">
+                {investing_cards_html}
+            </div>
+        </div>
+        '''
 
     html_content = f"""<!DOCTYPE html>
 <html lang="ko" data-theme="dark">
@@ -891,6 +1048,23 @@ def save_html_dashboard(date_str, time_str, market_data, market_summary, press_r
             border-color: #bfdbfe !important;
         }}
 
+        /* 인베스팅닷컴 탭 버튼 스타일 */
+        .investing-tab-btn {{
+            color: var(--btn-inactive-text);
+            background-color: transparent;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }}
+        .investing-tab-btn:hover {{
+            opacity: 0.9;
+        }}
+        .investing-tab-btn.active {{
+            background-color: var(--btn-active-bg) !important;
+            color: var(--btn-active-text) !important;
+            box-shadow: var(--btn-active-shadow);
+            border-color: var(--border-switcher);
+        }}
+
         /* 모달 스크롤바 커스텀 */
         #article-modal ::-webkit-scrollbar {{
             width: 6px;
@@ -933,7 +1107,7 @@ def save_html_dashboard(date_str, time_str, market_data, market_summary, press_r
                     <span class="text-2xl">📈</span>
                     <h1 class="text-2xl font-bold theme-title text-gray-900">경제·증시 & 언론사 1면 심층 브리핑</h1>
                 </div>
-                <p class="text-xs theme-subtitle text-gray-500 mt-1">기준 시각: {date_str} {time_str} KST | 출처: 네이버 뉴스스탠드 (경향 · 한경 · 매경 1면)</p>
+                <p class="text-xs theme-subtitle text-gray-500 mt-1">기준 시각: {date_str} {time_str} KST | 출처: 네이버 뉴스스탠드 (경향 · 한경 · 매경 1면) & 인베스팅닷컴 주요 뉴스</p>
             </div>
             <!-- 공유 버튼군 -->
             <div class="flex flex-wrap items-center gap-2">
@@ -990,6 +1164,11 @@ def save_html_dashboard(date_str, time_str, market_data, market_summary, press_r
             {press_sections_html}
         </section>
 
+        <!-- Investing.com Section (매일경제 하단 별도 탭 배치) -->
+        <section class="space-y-4">
+            {investing_section_html}
+        </section>
+
         <footer class="text-center text-xs theme-subtitle text-gray-400 py-6 space-y-2">
             <div>aiworks/schedule • 매일 아침 06:00 자동 갱신</div>
             <div>
@@ -1031,6 +1210,11 @@ def save_html_dashboard(date_str, time_str, market_data, market_summary, press_r
                 <div class="space-y-2">
                     <h2 id="modal-headline" class="text-xl sm:text-2xl font-bold theme-title leading-snug"></h2>
                     <div id="modal-subtitle" class="text-xs sm:text-sm font-semibold text-indigo-400 theme-subtitle border-l-4 border-indigo-500 pl-3 py-1"></div>
+                </div>
+
+                <!-- 기사 썸네일 (인베스팅닷컴 등) -->
+                <div id="modal-img-container" class="hidden mb-2 rounded-xl overflow-hidden max-h-64 border theme-border-subtle bg-slate-100 flex items-center justify-center">
+                    <img id="modal-img" src="" alt="뉴스 썸네일" class="w-full h-full object-cover">
                 </div>
 
                 <!-- 핵심 요약 박스 -->
@@ -1119,10 +1303,23 @@ def save_html_dashboard(date_str, time_str, market_data, market_summary, press_r
         badgeEl.textContent = art.press || '언론사';
         if ((art.press || '').includes('경향')) badgeEl.className = 'px-2.5 py-1 text-xs font-bold text-white rounded-md bg-blue-600';
         else if ((art.press || '').includes('한국')) badgeEl.className = 'px-2.5 py-1 text-xs font-bold text-white rounded-md bg-emerald-600';
+        else if ((art.press || '').includes('인베스팅')) badgeEl.className = 'px-2.5 py-1 text-xs font-bold text-white rounded-md bg-orange-500';
         else badgeEl.className = 'px-2.5 py-1 text-xs font-bold text-white rounded-md bg-amber-600';
 
-        document.getElementById('modal-type-badge').textContent = art.type || (art.is_top ? '1면 톱기사' : '1면 주요기사');
+        document.getElementById('modal-type-badge').textContent = art.category_name || art.type || (art.is_top ? '1면 톱기사' : '1면 주요기사');
         document.getElementById('modal-summary').textContent = art.summary || '';
+
+        const imgContainer = document.getElementById('modal-img-container');
+        const imgEl = document.getElementById('modal-img');
+        if (imgContainer && imgEl) {{
+            if (art.img_url) {{
+                imgEl.src = art.img_url;
+                imgContainer.classList.remove('hidden');
+            }} else {{
+                imgContainer.classList.add('hidden');
+                imgEl.src = '';
+            }}
+        }}
 
         const parsContainer = document.getElementById('modal-body-paragraphs');
         parsContainer.innerHTML = '';
@@ -1136,6 +1333,11 @@ def save_html_dashboard(date_str, time_str, market_data, market_summary, press_r
 
         const origLink = document.getElementById('modal-orig-link');
         origLink.href = art.link || '#';
+        if ((art.press || '').includes('인베스팅')) {{
+            origLink.innerHTML = '<span>인베스팅닷컴 원문 페이지에서 보기</span> <span>↗</span>';
+        }} else {{
+            origLink.innerHTML = '<span>신문사 원문 페이지에서 보기</span> <span>↗</span>';
+        }}
 
         // 테마 동기화
         var curMode = document.documentElement.getAttribute('data-theme') || 'dark';
@@ -1187,6 +1389,25 @@ def save_html_dashboard(date_str, time_str, market_data, market_summary, press_r
             copyLink();
         }}
     }}
+
+    function switchInvestingTab(tab) {{
+        document.querySelectorAll('.investing-tab-btn').forEach(function(btn) {{
+            if (btn.getAttribute('data-tab') === tab) {{
+                btn.classList.add('active');
+            }} else {{
+                btn.classList.remove('active');
+            }}
+        }});
+
+        var items = document.querySelectorAll('.investing-news-item');
+        items.forEach(function(item) {{
+            if (tab === 'all' || item.getAttribute('data-category') === tab) {{
+                item.style.display = '';
+            }} else {{
+                item.style.display = 'none';
+            }}
+        }});
+    }}
     </script>
 </body>
 </html>
@@ -1230,31 +1451,37 @@ def main():
             "opinions": opinions
         })
 
-    # 4. JSON 원본 저장
+    # 4. 인베스팅닷컴 실시간 주요 뉴스 수집 (주식시장, 경제, 핫이슈)
+    print("⚡ 인베스팅닷컴(kr.investing.com) 주요 뉴스 수집 중...")
+    investing_news = fetch_investing_news()
+    print(f" - 인베스팅닷컴 주요 뉴스 {len(investing_news)}건 수집 완료")
+
+    # 5. JSON 원본 저장
     raw_payload = {
         "date": date_str,
         "time": time_str,
         "market_summary": market_summary,
         "market": market_data,
-        "press": press_reports
+        "press": press_reports,
+        "investing_news": investing_news
     }
     json_path = os.path.join(DATA_DIR, f"briefing_{date_str.replace('-', '')}.json")
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(raw_payload, f, ensure_ascii=False, indent=2)
 
-    # 5. CSV 누적 저장
+    # 6. CSV 누적 저장
     save_csv_history(date_str, market_data)
 
-    # 6. 마크다운 리포트 저장
-    daily_md, latest_md = save_markdown_report(date_str, time_str, market_data, market_summary, press_reports)
+    # 7. 마크다운 리포트 저장
+    daily_md, latest_md = save_markdown_report(date_str, time_str, market_data, market_summary, press_reports, investing_news=investing_news)
 
-    # 7. HTML 웹 대시보드 저장
-    save_html_dashboard(date_str, time_str, market_data, market_summary, press_reports)
+    # 8. HTML 웹 대시보드 저장
+    save_html_dashboard(date_str, time_str, market_data, market_summary, press_reports, investing_news=investing_news)
 
-    # 8. GitHub Pages (웹 호스팅) 자동 배포
+    # 9. GitHub Pages (웹 호스팅) 자동 배포
     public_url = sync_to_github_pages(date_str)
 
-    # 9. 스마트폰 팝업 푸시 알림 전송 (ntfy.sh)
+    # 10. 스마트폰 팝업 푸시 알림 전송 (ntfy.sh)
     send_mobile_push(date_str, market_summary, click_url=public_url, topic=NTFY_TOPIC)
 
     print(f"✅ 모든 수집, 웹 배포 및 스마트폰 푸시 알림 완료!")
