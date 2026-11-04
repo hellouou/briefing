@@ -1,16 +1,16 @@
 # 📊 일일 경제·증시 및 3대 언론사 심층 모닝 브리핑
-> **기준 시각**: 2026-11-05 01:10 KST | **공유용 웹 링크**: [https://tr.ee/ldzyWo](https://tr.ee/ldzyWo)
+> **기준 시각**: 2026-11-05 06:00 KST | **공유용 웹 링크**: [https://tr.ee/ldzyWo](https://tr.ee/ldzyWo)
 
 ## 💡 시장 핵심 한눈에 보기
-> 미국 나스닥 지수가 1% 이상 하락하며 기술주 중심의 차익 실현 및 경계 심리가 부각되었습니다. 원/달러 환율은 1,340.78원 수준을 기록하고 있습니다. 국제 유가(WTI)가 -11.73% 급락세를 보였습니다.
+> 미국 나스닥 지수가 1% 이상 하락하며 기술주 중심의 차익 실현 및 경계 심리가 부각되었습니다. 원/달러 환율은 1,340.95원 수준을 기록하고 있습니다. 국제 유가(WTI)가 -14.84% 급락세를 보였습니다.
 
 ### 🌐 미국 및 글로벌 주요 지수
 | 지수명 | 마감 지수 | 전일비 | 등락률 |
 | :--- | :--- | :--- | :--- |
-| **다우 존스** | `53,099.93 pt` | 🔺 +624.83 | `+1.19%` |
-| **S&P 500** | `7,679.64 pt` | 🔻 64.34 | `-0.83%` |
-| **나스닥** | `25,766.15 pt` | 🔻 783.70 | `-2.95%` |
-| **필라델피아 반도체** | `10,165.01 pt` | 🔻 1,518.99 | `-13.00%` |
+| **다우 존스** | `53,366.08 pt` | 🔺 +890.98 | `+1.70%` |
+| **S&P 500** | `7,690.15 pt` | 🔻 53.83 | `-0.70%` |
+| **나스닥** | `25,739.72 pt` | 🔻 810.13 | `-3.05%` |
+| **필라델피아 반도체** | `10,273.23 pt` | 🔻 1,410.77 | `-12.07%` |
 
 ### 🇰🇷 국내 증시 (전일 마감)
 | 지수명 | 마감 지수 | 전일비 | 등락률 |
@@ -21,11 +21,11 @@
 ### 💵 환율 · 원자재 · 금리 · 가상자산
 | 지표명 | 현재가 | 전일비 | 등락률 |
 | :--- | :--- | :--- | :--- |
-| **원/달러 환율** | `1,340.78 원` | 🔺 +0.44 | `+0.03%` |
-| **WTI 국제유가** | `91.91 달러` | 🔻 12.21 | `-11.73%` |
-| **금 선물** | `4,059.70 달러` | 🔺 +160.80 | `+4.12%` |
-| **미국 10년물 국채금리** | `4.92 %` | 🔻 0.07 | `-1.44%` |
-| **비트코인** | `80,546.03 달러` | 🔺 +3,111.28 | `+4.02%` |
+| **원/달러 환율** | `1,340.95 원` | 🔺 +0.61 | `+0.05%` |
+| **WTI 국제유가** | `88.67 달러` | 🔻 15.45 | `-14.84%` |
+| **금 선물** | `4,070.20 달러` | 🔺 +171.30 | `+4.39%` |
+| **미국 10년물 국채금리** | `4.89 %` | 🔻 0.09 | `-1.90%` |
+| **비트코인** | `80,073.60 달러` | 🔺 +2,638.85 | `+3.41%` |
 
 ---
 
@@ -132,50 +132,50 @@
 **3. [🔥 실시간 핫이슈] [’시간당 1000개 하역’ 보스턴다이내믹스, 차세대 물류 로봇 ’스트레치 2’ 공개](https://kr.investing.com/news/stock-market-news/article-2157530)**
 - *출처*: The Guru | *일시*: 2026-11-04 05:21:29
 
-**4. [🔥 실시간 핫이슈] [[얼리버드 세일] ProPicks AI 11월 신규 종목 리스트 공개…최대 55% 할인](https://kr.investing.com/news/stock-market-news/article-2157878)**
-- *출처*: Investing.com | *일시*: 2026-11-04 08:32:07
-
-**5. [🔥 실시간 핫이슈] [비트코인·이더리움·솔라나, 중간선거 때마다 최대 50% 급락… 오늘 미국 선거](https://kr.investing.com/news/cryptocurrency-news/article-2157423)**
+**4. [🔥 실시간 핫이슈] [비트코인·이더리움·솔라나, 중간선거 때마다 최대 50% 급락… 오늘 미국 선거](https://kr.investing.com/news/cryptocurrency-news/article-2157423)**
 - *출처*: Investing.com | *일시*: 2026-11-04 01:17:33
+
+**5. [🔥 실시간 핫이슈] [[얼리버드 세일] ProPicks AI 11월 신규 종목 리스트 공개…최대 55% 할인](https://kr.investing.com/news/stock-market-news/article-2157878)**
+- *출처*: Investing.com | *일시*: 2026-11-04 08:32:07
 
 **6. [🔥 실시간 핫이슈] [로이터 설문 "美 중간선거 앞두고 달러 약세 전망 유지"…예상보다 ’강세’ 전망도 나와](https://kr.investing.com/news/stock-market-news/article-2157531)**
 - *출처*: The Guru | *일시*: 2026-11-04 05:20:23
 
-**7. [📈 증시 뉴스] [Blackstone·사우디 국부펀드, 두바이 기업 5억2900만 달러 IPO 참여 - Bloomberg](https://kr.investing.com/news/stock-market-news/article-93CH-2159377)**
-- *출처*: Investing.com | *일시*: 2026-11-04 15:49:14
+**7. [📈 증시 뉴스] [Performance Food Group 주가가 오늘 급등한 이유는?](https://kr.investing.com/news/stock-market-news/article-93CH-2159723)**
+- *출처*: Investing.com | *일시*: 2026-11-04 20:32:11
 
-**8. [📈 증시 뉴스] [중국 규제당국 조사에 OPay 미국 IPO 중단 - 블룸버그](https://kr.investing.com/news/stock-market-news/article-93CH-2159375)**
-- *출처*: Investing.com | *일시*: 2026-11-04 15:48:44
+**8. [📈 증시 뉴스] [Procore Technologies 주가, 오늘 급등한 이유는?](https://kr.investing.com/news/stock-market-news/article-93CH-2159715)**
+- *출처*: Investing.com | *일시*: 2026-11-04 20:25:28
 
-**9. [📈 증시 뉴스] [웰스파고, On Holding 비중확대 개시…2027년 성장 재가속 전망](https://kr.investing.com/news/stock-market-news/article-2159367)**
-- *출처*: Investing.com | *일시*: 2026-11-04 15:44:20
+**9. [📈 증시 뉴스] [Bruker 주가, 오늘 급등한 이유는?](https://kr.investing.com/news/stock-market-news/article-93CH-2159712)**
+- *출처*: Investing.com | *일시*: 2026-11-04 20:23:44
 
-**10. [📈 증시 뉴스] [Northrop Grumman 주가, 오늘 하락한 이유는?](https://kr.investing.com/news/stock-market-news/article-93CH-2159356)**
-- *출처*: Investing.com | *일시*: 2026-11-04 15:40:02
+**10. [📈 증시 뉴스] [Modine Manufacturing 주가, 실적 부진에 25.3% 급락한 이유는?](https://kr.investing.com/news/stock-market-news/article-93CH-2159706)**
+- *출처*: Investing.com | *일시*: 2026-11-04 20:20:21
 
-**11. [📈 증시 뉴스] [제너럴 다이내믹스 주가, 오늘 왜 하락하나?](https://kr.investing.com/news/stock-market-news/article-93CH-2159355)**
-- *출처*: Investing.com | *일시*: 2026-11-04 15:39:57
+**11. [📈 증시 뉴스] [S&P, AI 칩 수요 성장에 KLA 신용등급 ’A’로 상향](https://kr.investing.com/news/stock-market-news/article-2159708)**
+- *출처*: Investing.com | *일시*: 2026-11-04 20:20:05
 
-**12. [📈 증시 뉴스] [록히드 마틴 주가, 오늘 왜 하락하나?](https://kr.investing.com/news/stock-market-news/article-93CH-2159354)**
-- *출처*: Investing.com | *일시*: 2026-11-04 15:39:50
+**12. [📈 증시 뉴스] [Everus Construction 주가, 호실적에도 급락한 이유는?](https://kr.investing.com/news/stock-market-news/article-93CH-2159703)**
+- *출처*: Investing.com | *일시*: 2026-11-04 20:19:58
 
-**13. [🌍 글로벌 경제] [중국, 캐나다와의 무역 갈등 완화 의지 표명](https://kr.investing.com/news/economy-news/article-2159376)**
+**13. [🌍 글로벌 경제] [캐나다 예산안, 노숙자 문제 해결 위한 지원 확대 예정](https://kr.investing.com/news/economy-news/article-2159716)**
+- *출처*: Investing.com | *일시*: 2026-11-04 20:24:51
+
+**14. [🌍 글로벌 경제] [OpenAI, 코덱스 개발자 인프라 확장 위해 Pierre 인수 추진](https://kr.investing.com/news/economy-news/article-2159456)**
+- *출처*: Investing.com | *일시*: 2026-11-04 16:32:49
+
+**15. [🌍 글로벌 경제] [중국, 캐나다와의 무역 갈등 완화 의지 표명](https://kr.investing.com/news/economy-news/article-2159376)**
 - *출처*: Investing.com | *일시*: 2026-11-04 15:47:38
 
-**14. [🌍 글로벌 경제] [마이크 존슨, 내년 하원 공화당 지도부 이끌지 않을 것](https://kr.investing.com/news/economy-news/article-2159362)**
+**16. [🌍 글로벌 경제] [마이크 존슨, 내년 하원 공화당 지도부 이끌지 않을 것](https://kr.investing.com/news/economy-news/article-2159362)**
 - *출처*: Investing.com | *일시*: 2026-11-04 15:42:23
 
-**15. [🌍 글로벌 경제] [UAE, 호르무즈 해협 우회 위한 세 번째 원유 파이프라인 검토](https://kr.investing.com/news/economy-news/article-2159352)**
+**17. [🌍 글로벌 경제] [UAE, 호르무즈 해협 우회 위한 세 번째 원유 파이프라인 검토](https://kr.investing.com/news/economy-news/article-2159352)**
 - *출처*: Investing.com | *일시*: 2026-11-04 15:37:07
 
-**16. [🌍 글로벌 경제] [폴란드 중앙은행, 2026년 물가상승률 3.1~3.2% 전망](https://kr.investing.com/news/economy-news/article-93CH-2159257)**
+**18. [🌍 글로벌 경제] [폴란드 중앙은행, 2026년 물가상승률 3.1~3.2% 전망](https://kr.investing.com/news/economy-news/article-93CH-2159257)**
 - *출처*: Investing.com | *일시*: 2026-11-04 15:08:38
-
-**17. [🌍 글로벌 경제] [이란 정부, "미국 유권자들이 전쟁을 거부했다"며 트럼프 비판](https://kr.investing.com/news/economy-news/article-2158892)**
-- *출처*: Investing.com | *일시*: 2026-11-04 14:02:19
-
-**18. [🌍 글로벌 경제] [민주당, 미 의회 양원 장악…AMD 급등 등 시장 주요 변수](https://kr.investing.com/news/economy-news/article-2157921)**
-- *출처*: Investing.com | *일시*: 2026-11-04 08:56:25
 
 ---
 
