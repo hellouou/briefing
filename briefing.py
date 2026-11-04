@@ -17,7 +17,7 @@ DATA_DIR = os.path.join(BASE_DIR, "data")
 REPORTS_DIR = os.path.join(BASE_DIR, "reports")
 
 # 공유용 공식 마스킹 URL (개인 깃허브 계정 노출 방지용 단축링크)
-PUBLIC_MASKED_URL = "https://tr.ee/Z51VtU"
+PUBLIC_MASKED_URL = "https://tr.ee/ldzyWo"
 # 실제 내부 호스팅 URL (배포 목적지 - 외부에 노출하지 않음)
 INTERNAL_HOSTING_URL = "https://hellouou.github.io/briefing/"
 # 핸드폰 알림 채널명 (ntfy.sh 앱에서 구독할 채널)

@@ -23,7 +23,7 @@ def sync_and_push(commit_msg="Update briefing web dashboard & code"):
         push_res = subprocess.run(["git", "push", "origin", "main"], cwd=BASE_DIR, capture_output=True, text=True)
         if push_res.returncode == 0:
             print("\n★ [성공] briefing 깃허브 독립 저장소 배포 완료!")
-            print("  - 마스킹 공유 링크: https://tr.ee/Z51VtU")
+            print("  - 마스킹 공유 링크: https://tr.ee/ldzyWo")
             print("  - 실제 호스팅 링크: https://hellouou.github.io/briefing/")
             return True
         else:
