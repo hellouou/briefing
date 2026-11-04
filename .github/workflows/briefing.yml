@@ -1,0 +1,44 @@
+name: Daily Morning Briefing Cloud Scheduler
+
+on:
+  schedule:
+    # 매일 UTC 21:00 = 한국 시간(KST) 매일 아침 06:00 정각 자동 실행
+    - cron: '0 21 * * *'
+  workflow_dispatch: # GitHub 웹 Actions 탭에서 수동 즉시 실행 가능
+
+permissions:
+  contents: write
+
+jobs:
+  briefing:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Configure Git Author
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Run Morning Briefing Script
+        env:
+          TZ: 'Asia/Seoul'
+        run: |
+          python briefing.py
+
+      - name: Push any remaining updates
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git add index.html latest_briefing.md history.csv data reports
+            git commit -m "Auto-update morning briefing (Cloud Actions)" || echo "No changes to commit"
+            git push origin main
+          fi

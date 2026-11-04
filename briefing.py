@@ -1416,7 +1416,9 @@ def save_html_dashboard(date_str, time_str, market_data, market_summary, press_r
         f.write(html_content)
 
 def main():
-    now = datetime.datetime.now()
+    # KST (한국 표준시 UTC+9) 기준 일시 생성 (로컬/클라우드 GitHub Actions 모두 일치)
+    kst_tz = datetime.timezone(datetime.timedelta(hours=9))
+    now = datetime.datetime.now(kst_tz)
     date_str = now.strftime("%Y-%m-%d")
     time_str = now.strftime("%H:%M")
     
